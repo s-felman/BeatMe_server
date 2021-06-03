@@ -44,15 +44,15 @@ router.get("/createComptitonColection", () => {
   });
 })
 
+
 router.get("/login", function (req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-  console.logre("req", req.query);
-  const { userName, email , password } = req.query;
+  const { userName, email, password } = req.query;
   //Check the pwd in the server
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMeDB");
-    var query = { userName };
+    var query = { userName, email };
     dbo.collection("users").find(query).toArray(function (err, result) {
       if (err) throw err;
       if (!result || result.length === 0) {
@@ -71,22 +71,30 @@ router.get("/login", function (req, res) {
 
 });
 
-router.get("/signup", (req, res)=> {
-  const { username, firstname, lastname, email, password, } = req.params; //Adress, phone ....
-  //Validations.
-  //Check if user exists
-  MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
+
+// router.get("/signup", (req, res)=> {
+//   const { username, firstname, lastname, email, password, } = req.params; //Adress, phone ....
+//   //Validations.
+//   //Check if user exists
+//   MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("BeatMeDB");
+//     var myobj = { username: `${username}`, password: password, firstname: "שני",lastname: "lastname",email:"email" };
+
+router.post("/signup", function (req, res) {
+  const { firstName, lastName, userName, phone, email, password, getEmail } = req.body;
+  MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMeDB");
-    var myobj = { username: `${username}`, password: password, firstname: "שני",lastname: "lastname",email:"email" };
+    var myobj = { firstName: firstName,lastName: lastName, userName: userName, phone: phone, email: email, password: password, getEmail: getEmail };
     dbo.collection("users").insertOne(myobj, function (err, res) {
       if (err) throw err;
       console.log("1 document inserted");
       db.close();
     });
-    // const token = generateAccessToken(user);
-    // console.log("token", token);
-    // return res.json({ token }).send();
+    const token = generateAccessToken(user);
+    console.log("token", token);
+    return res.json({ token }).send();
   });
 });
 
