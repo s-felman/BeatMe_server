@@ -12,7 +12,7 @@ const TOKEN_SECRET =
 const generateAccessToken = (username) => {
   return jwt.sign({ username }, TOKEN_SECRET);
 };
-
+ 
 router.get("/createDB", (req, res) => {
   MongoClient.connect(urlToCreate, function (err, db) {
     console.log("err", err)
@@ -82,19 +82,23 @@ router.get("/login", function (req, res) {
 //     var myobj = { username: `${username}`, password: password, firstname: "שני",lastname: "lastname",email:"email" };
 
 router.post("/signup", function (req, res) {
-  const { firstName, lastName, userName, phone, email, password, getEmail } = req.body;
-  MongoClient.connect(url, function (err, db) {
+  //console.log(req);
+  //const { firstName, lastName, userName, phone, email, password, getEmail } = req.body;
+  MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMeDB");
-    var myobj = { firstName: firstName,lastName: lastName, userName: userName, phone: phone, email: email, password: password, getEmail: getEmail };
+    var myobj = { firstName: req.query.firstName,lastName: req.query.lastName, userName: req.query.userName, 
+      phone: req.query.phone, email: req.query.email, password: req.query.password, getEmail: req.query.getEmail };
+      console.log(myobj);
+      //var myobj2={firstName,lastName,userName,phone,email,password,getEmail};
     dbo.collection("users").insertOne(myobj, function (err, res) {
       if (err) throw err;
       console.log("1 document inserted");
       db.close();
     });
-    const token = generateAccessToken(user);
-    console.log("token", token);
-    return res.json({ token }).send();
+    // const token = generateAccessToken(user);
+    // console.log("token", token);
+    // return res.json({ token }).send();
   });
 });
 
@@ -110,13 +114,14 @@ MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, db) {
   });
 });})
 
-router.get("/addParticipant",(req,res)=>{
-  console.log(req.params);
+router.post("/addParticipant",(req,res)=>{
+  console.log("req",req.query);
   const { comptitonName,userName, email} = req.params;
   MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMedb");
-    var myobj = { comptitonName: comptitonName, userName:`${userName}`, email:"email" };
+    var query = { comptitonName: req.query.comptitonName};
+    var myobj = {  userName: req.query.username, email:req.query.email};
     dbo.collection("comptitions").insertOne(myobj, function(err, res) {
       if (err) throw err;
       console.log("1 document inserted");
