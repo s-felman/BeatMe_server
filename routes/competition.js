@@ -1,10 +1,13 @@
-const express = require("express");
-const router = express.Router();
+var express = require("express");
+var router = express.Router();
 const jwt = require("jsonwebtoken");
 
 var MongoClient = require('mongodb').MongoClient;
 var urlToCreate = "mongodb://localhost:27017/BeatMeDB";
 var url = "mongodb://localhost:27017/";
+
+
+const controller=require("../controllers/userController");
 
 const TOKEN_SECRET =
   "F9EACB0E0AB8102E999DF5E3808B215C028448E868333041026C481960EFC126";
@@ -61,16 +64,15 @@ MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, db) {
 
 router.post("/addCompetiton",(req,res)=>{
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-  console.log("req",req);
-  //const { comptitonName,userName, email} = req.params;
   MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMedb");
-   // var query = { comptitonName: req.query.comptitonName};
-   // var myobj = {  comptitonName: req.query.comptitonName, type:req.query.type, userList:req.query.userList};
+    var query =  JSON.parse(req.query.competition);
+    var myobj = { comptitonName: query.name, type:query.type, userList:query.userList, 
+                  details: query.details, target: query.target, targetDate: query.targetDate};
     dbo.collection("competitions").insertOne(myobj, function(err, res) {
       if (err) throw err;
-      console.log("1 document inserted");
+      console.log("1 dohcument inserted to competiton");
       db.close();
     });
   });})
