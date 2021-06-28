@@ -71,6 +71,20 @@ router.post("/signup", function (req, res) {
   });
 });
 
+router.put("/update", function(req, res){
+  MongoClient.connect(url, function(err, db){
+    if (err) throw err;
+    var dbo = db.db("BeatMeDB");
+    var myobj1= req.params.myobj1 ;
+    var myobj2 = { $set: req.params.myobj2 };
+      dbo.collection("users").updateOne(myobj1, myobj2, function(err, res){
+        if (err) throw err;
+        console.log("1 document updated");
+        db.close();
+      });
+  });
+});
+
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
