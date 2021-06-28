@@ -20,30 +20,37 @@ router.get("/createUserColection",() => {
 
 router.get("/login", function (req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-  const { userName, email, password } = req.query;
+  const { userName, password } = req.query;
+
   //Check the pwd in the server
-  MongoClient.connect(url, function (err, db) {
+  MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMeDB");
-    var query = { userName, email };
-    dbo.collection("users").find(query).toArray(function (err, result) {
+    var query = { userName, password };
+    console.log(query);
+    var obj={userName: userName, password: password};
+    dbo.collection("users").find(obj)
+    .toArray(function (err, result) {
       if (err) throw err;
-      if (!result || result.length === 0) {
-        return res.status(401).send();
-      }
+      // if (!result || result.length === 0) {
+      //   return res.status(401).send();
+      // }
+      console.log(result);
       db.close();
-      if (result[0].password = password) {
-        const token = generateAccessToken(user);
-        console.log("token", token);
-        return res.json({ token }).send();
-      } else {
-        return res.status(401).send();
-      }
+      return res.send(result);
+      // if (result[0].password = password) {
+      //   const token = generateAccessToken(user);
+      //   console.log("token", token);
+      //   return res.json({ token }).send();
+      // } else {
+      //   return res.status(401).send();
+      // }
     });
   });
 
 });
 router.post("/signup", function (req, res) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   //console.log(req);
   //const { firstName, lastName, userName, phone, email, password, getEmail } = req.body;
   MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
@@ -67,5 +74,9 @@ router.post("/signup", function (req, res) {
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
+
+router.get("/getUserById", function(req, res){
+
+})
 
 module.exports = router;
