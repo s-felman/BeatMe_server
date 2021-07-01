@@ -65,9 +65,9 @@ router.post("/addCompetiton",(req,res)=>{
   //const { comptitonName,userName, email} = req.params;
   MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("BeatMedb");
-   // var query = { comptitonName: req.query.comptitonName};
-   // var myobj = {  comptitonName: req.query.comptitonName, type:req.query.type, userList:req.query.userList};
+    var dbo = db.db("BeatMeDB");
+    var query = JSON.parse(req.query.competition);
+    var myobj = {  comptitonName: query.name, type:query.type, userList:query.userList, details: query.details, target: query.target, targetDate: query.targetDate};
     dbo.collection("competitions").insertOne(myobj, function(err, res) {
       if (err) throw err;
       console.log("1 document inserted");

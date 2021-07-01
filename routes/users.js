@@ -20,13 +20,14 @@ router.get("/createUserColection",() => {
 
 router.get("/login", function (req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-  const { userName, email, password } = req.query;
+  const { userName, password } = req.query;
   //Check the pwd in the server
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMeDB");
-    var query = { userName, email };
+    var query = { userName, password };
     dbo.collection("users").find(query).toArray(function (err, result) {
+      console.log("query", query);
       if (err) throw err;
       if (!result || result.length === 0) {
         return res.status(401).send();
