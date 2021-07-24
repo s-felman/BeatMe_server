@@ -66,11 +66,11 @@ router.post("/addCompetiton",(req,res)=>{
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("BeatMedb");
-    var query =  JSON.parse(req.query.competition);
-    var myobj = { comptitonName: query.name, type:query.type, userList:query.userList, 
-                  details: query.details, target: query.target, targetDate: query.targetDate};
+
+    var dbo = db.db("BeatMeDB");
+    var query = JSON.parse(req.query.competition);
     dbo.collection("competitions").insertOne(myobj, function(err, res) {
+    var myobj = {  comptitonName: query.name, type:query.type, userList:query.userList, details: query.details, target: query.target, targetDate: query.targetDate};
       if (err) throw err;
       console.log("1 dohcument inserted to competiton");
       db.close();

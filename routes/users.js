@@ -26,11 +26,13 @@ router.get("/login", function (req, res) {
   MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
     if (err) throw err;
     var dbo = db.db("BeatMeDB");
-    var query = { userName, password };
-    console.log(query);
+    //var query = { userName, password };
+
+//    console.log(query);
     var obj={userName: userName, password: password};
     dbo.collection("users").find(obj)
     .toArray(function (err, result) {
+
       if (err) throw err;
       // if (!result || result.length === 0) {
       //   return res.status(401).send();
