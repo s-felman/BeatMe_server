@@ -28,8 +28,8 @@ router.get("/createDB", (req, res) => {
 router.get("/createComptitonColection", () => {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var dbo = db.db("BeattMeDB");
-    dbo.createCollection("comptitions", function (err, res) {
+    var dbo = db.db("BeatMeDB");
+    dbo.createCollection("competitions", function (err, res) {
       if (err) throw err;
       console.log("Collection created!");
       db.close();
@@ -69,10 +69,10 @@ router.post("/addCompetiton",(req,res)=>{
 
     var dbo = db.db("BeatMeDB");
     var query = JSON.parse(req.query.competition);
-    dbo.collection("competitions").insertOne(myobj, function(err, res) {
-    var myobj = {  comptitonName: query.name, type:query.type, userList:query.userList, details: query.details, target: query.target, targetDate: query.targetDate};
+    dbo.collection("competitions").insertOne(query, function(err, res) {
+    //var myobj = {  comptitonName: query.name, type:query.type, userList:query.userList, details: query.details, target: query.target, targetDate: query.targetDate};
       if (err) throw err;
-      console.log("1 dohcument inserted to competiton");
+      console.log("1 document inserted to competiton");
       db.close();
     });
   });})

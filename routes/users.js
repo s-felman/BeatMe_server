@@ -34,9 +34,9 @@ router.get("/login", function (req, res) {
     .toArray(function (err, result) {
 
       if (err) throw err;
-      // if (!result || result.length === 0) {
-      //   return res.status(401).send();
-      // }
+      if (!result || result.length === 0) {
+        return res.status(401).send();
+      }
       console.log(result);
       db.close();
       return res.send(result);
