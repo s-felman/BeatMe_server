@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var compRouter = require('./routes/competition');
-
+var mongoose= require('mongoose');
+var cors = require('cors');
 
 var app = express();
 
@@ -18,6 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.json({limit: "30mb",extended:true}));
+app.use(express.urlencoded({limit: "30mb",extended:true}));
+app.use(cors())
 app.use('/competition', compRouter);
 app.use('/users', usersRouter);
 
@@ -36,5 +40,15 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
+
+
+//const mongodb = "mongodb+srv://ckmobile:password@nodetuts.qwlpv.mongodb.net/items-database?retryWrites=true&w=majority";
+// const PORT = process.env.PORT || 3000;
+// mongoose.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true })
+// .then(()=>app.listen(PORT,console.log(`Server running on ${PORT}`)))
+// .catch(err=>console.log(err));
 
 module.exports = app;

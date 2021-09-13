@@ -1,3 +1,5 @@
+var getItems =require('../controllers/competitonController');
+var createItem= require("../controllers/competitonController")
 var express = require("express");
 var router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -76,5 +78,9 @@ router.post("/addCompetiton",(req,res)=>{
       db.close();
     });
   });})
+
+router.get('/getitem',getItems)
+
+router.post('/createitem',createItem);
 module.exports = router;
 
